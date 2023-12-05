@@ -214,10 +214,10 @@ def get_arguments():
 
     # out path
     parser.add_argument('--save_folder', type=str, default='', help='output path')
-    parser.add_argument('--tr_splits', type=str, nargs='+',default=[], help='train splits')
-    parser.add_argument('--dev_splits', type=str, nargs='+',default=[], help='dev splits')
-    parser.add_argument('--te_splits', type=str, nargs='+',default=[], help='test splits')
-    parser.add_argument('--merge_lst', type=str, nargs='+',default=[], help='merge list')
+    parser.add_argument('-tr','--tr_splits', type=str, nargs='+',default=[], help='train splits')
+    parser.add_argument('-dev','--dev_splits', type=str, nargs='+',default=[], help='dev splits')
+    parser.add_argument('-te','--te_splits', type=str, nargs='+',default=[], help='test splits')
+    parser.add_argument('-m','--merge_lst', type=str, nargs='+',default=[], help='merge list')
     parser.add_argument('--merge_name', type=str, default='train', help='data path')
     parser.add_argument('--data_folder', type=str, default='', help='data path')
 
