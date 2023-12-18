@@ -94,7 +94,7 @@ def get_arguments():
     parser.add_argument('--seed', type=int, default=101, help='')
 
     # muti-gpu
-    parser.add_argument("--local_rank", type=int, default=-1, help="For distributed training: local_rank")
+    parser.add_argument("--local-rank", type=int, default=-1, help="For distributed training: local_rank")
     parser.add_argument("--server_ip", type=str, default="", help="For distant debugging.")
     parser.add_argument("--server_port", type=str, default="", help="For distant debugging.")
 
@@ -102,18 +102,19 @@ def get_arguments():
     return args
 
 def setup_env(args):
-    if args.local_rank == -1:
+    local_rank = int(os.environ["LOCAL_RANK"])
+    if local_rank == -1:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         args.n_gpu = torch.cuda.device_count()
     else:  # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
-        torch.cuda.set_device(args.local_rank)
-        device = torch.device("cuda", args.local_rank)
+        torch.cuda.set_device(local_rank)
+        device = torch.device("cuda", local_rank)
         torch.distributed.init_process_group(backend="nccl")
         args.n_gpu = 1
     args.device = device
 
     # store args
-    if args.local_rank != -1:
+    if local_rank != -1:
         args.world_size = torch.distributed.get_world_size()
         args.rank = dist.get_rank()
 
@@ -126,9 +127,10 @@ def load_states_from_checkpoint(model_file: str) -> CheckpointState:
 def main():
     # args setting
     args = get_arguments()
+    local_rank = int(os.environ["LOCAL_RANK"])
 
     # out dir set
-    if dist.get_rank() == 0:
+    if local_rank == 0:
         if not os.path.exists(args.checkpoint_path):
             os.makedirs(args.checkpoint_path)
     # dist.barrier()
